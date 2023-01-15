@@ -15,12 +15,19 @@ class Downloader:
     def download(self, extension: str, verbose: bool = False):
         links = self.parser.get_links_with_extension(extension)
         for link in links:
-            (filepath, response) = request.urlretrieve(link, self.destination / link[link.rfind('/') + 1:])
-            print(filepath)
+            print(f"Downloading {link}...", end=" ")
+            try:
+                (filepath, response) = request.urlretrieve(link, self.destination / link[link.rfind('/') + 1:])
+            except Exception as e:
+                print("Failed to download!")
+                print(e)
+                continue
+            else:
+                print("Done!")
             if verbose:
                 print(response)
 
 
 if __name__ == '__main__':
-    downloader = Downloader('https://www.cs.utexas.edu/users/EWD/index00xx.html', pathlib.Path("download_test"))
+    downloader = Downloader('https://www.cs.utexas.edu/users/EWD/index06xx.html', pathlib.Path("download_test"))
     downloader.download('pdf')
